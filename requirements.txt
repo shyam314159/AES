@@ -1,3 +1,0 @@
-brunette
-flake8
-pre-commit

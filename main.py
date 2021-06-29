@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from essentials import Sbox, InvSbox, x_2, Rcon
+from essentials import *
 
 
 def sub_bytes(s):
@@ -16,12 +15,10 @@ def mix_row(s):
 
 
 def mix_column(s):
-    """
-    Multiplication with a(x) = {03}x3 + {01}x2 + {01}x + {02}
+    ''' Multiplication with a(x) = {03}x3 + {01}x2 + {01}x + {02}
         | since 0x03 = 0x01 ^ 0x02 |
                   |    0x02   |  |         0x03        |  | 0x01 | | 0x01 |
-    s[0][c] = x_2[s[0][c]] ^ x_2[s[1][c]] ^ s[1][c] ^ s[2][c] ^ s[3][c]
-    """
+        s[0][c] = x_2[s[0][c]] ^ x_2[s[1][c]] ^ s[1][c] ^ s[2][c] ^ s[3][c]'''
 
     for c in range(4):
         a = s[0][c]
@@ -53,77 +50,39 @@ def invmix_row(s):
 
 
 def invmix_column(s):
-    """
-    Multiplication with inverse polynomial a-1(x) = {0b}x3 + {0d}x2 + {09}x + {0e}
-        | since (0x0e = 0x02 ^ 0x04 ^ 0x08) & (0x0b = 0x02 ^ 0x08 ^ 0x01) & (0x0d = 0x04 ^ 0x08 ^ 0x01) & (0x09 = 0x08 ^ 0x01)|
-        |                          0x0e                           | |                    0x0b                       | |                      0x0d                          | |              0x09             |
-        |     0x02     | |      0x04     | |        0x08          | | 0x01  | |    0x02    | |          0x08        | | 0x01  | |      0x04       | |          0x08        | | 0x01  | |        0x08         |
-    s[0][c] = x_2[s[0][c]] ^ x_2[x_2[s[0][c]]] ^ x_2[x_2[x_2[s[0][c]]]] ^ s[1][c] ^ x_2[s[1][c]] ^ x_2[x_2[x_2[s[1][c]]]] ^ s[2][c] ^ x_2[x_2[s[2][c]]] ^ x_2[x_2[x_2[s[2][c]]]] ^ s[3][c] ^ x_2[x_2[x_2[s[3][c]]]]
-    """
+    ''' Multiplication with inverse polynomial a-1(x) = {0b}x3 + {0d}x2 + {09}x + {0e}
+                 | since (0x0e = 0x02 ^ 0x04 ^ 0x08) & (0x0b = 0x02 ^ 0x08 ^ 0x01) & (0x0d = 0x04 ^ 0x08 ^ 0x01) & (0x09 = 0x08 ^ 0x01)|
+                 |                          0x0e                           | |                    0x0b                       | |                      0x0d                          | |              0x09             |
+                 |     0x02     | |      0x04     | |        0x08          | | 0x01  | |    0x02    | |          0x08        | | 0x01  | |      0x04       | |          0x08        | | 0x01  | |        0x08         |
+        s[0][c] = x_2[s[0][c]] ^ x_2[x_2[s[0][c]]] ^ x_2[x_2[x_2[s[0][c]]]] ^ s[1][c] ^ x_2[s[1][c]] ^ x_2[x_2[x_2[s[1][c]]]] ^ s[2][c] ^ x_2[x_2[s[2][c]]] ^ x_2[x_2[x_2[s[2][c]]]] ^ s[3][c] ^ x_2[x_2[x_2[s[3][c]]]] '''
     for c in range(4):
         a = s[0][c]
         b = s[1][c]
         d = s[2][c]
-        s[0][c] = (
-            x_2[s[0][c]]
-            ^ x_2[x_2[s[0][c]]]
-            ^ x_2[x_2[x_2[s[0][c]]]]
-            ^ s[1][c]
-            ^ x_2[s[1][c]]
-            ^ x_2[x_2[x_2[s[1][c]]]]
-            ^ s[2][c]
-            ^ x_2[x_2[s[2][c]]]
-            ^ x_2[x_2[x_2[s[2][c]]]]
-            ^ s[3][c]
-            ^ x_2[x_2[x_2[s[3][c]]]]
-        )
+        s[0][c] = x_2[s[0][c]] ^ x_2[x_2[s[0][c]]] ^ x_2[x_2[x_2[s[0][c]]]] ^ \
+                  s[1][c] ^ x_2[s[1][c]] ^ x_2[x_2[x_2[s[1][c]]]] ^ \
+                  s[2][c] ^ x_2[x_2[s[2][c]]] ^ x_2[x_2[x_2[s[2][c]]]] ^ \
+                  s[3][c] ^ x_2[x_2[x_2[s[3][c]]]]
 
-        s[1][c] = (
-            a
-            ^ x_2[x_2[x_2[a]]]
-            ^ x_2[s[1][c]]
-            ^ x_2[x_2[s[1][c]]]
-            ^ x_2[x_2[x_2[s[1][c]]]]
-            ^ s[2][c]
-            ^ x_2[s[2][c]]
-            ^ x_2[x_2[x_2[s[2][c]]]]
-            ^ s[3][c]
-            ^ x_2[x_2[s[3][c]]]
-            ^ x_2[x_2[x_2[s[3][c]]]]
-        )
+        s[1][c] = a ^ x_2[x_2[x_2[a]]] ^ \
+                  x_2[s[1][c]] ^ x_2[x_2[s[1][c]]] ^ x_2[x_2[x_2[s[1][c]]]] ^ \
+                  s[2][c] ^ x_2[s[2][c]] ^ x_2[x_2[x_2[s[2][c]]]] ^ \
+                  s[3][c] ^ x_2[x_2[s[3][c]]] ^ x_2[x_2[x_2[s[3][c]]]]
 
-        s[2][c] = (
-            a
-            ^ x_2[x_2[a]]
-            ^ x_2[x_2[x_2[a]]]
-            ^ b
-            ^ x_2[x_2[x_2[b]]]
-            ^ x_2[s[2][c]]
-            ^ x_2[x_2[s[2][c]]]
-            ^ x_2[x_2[x_2[s[2][c]]]]
-            ^ s[3][c]
-            ^ x_2[s[3][c]]
-            ^ x_2[x_2[x_2[s[3][c]]]]
-        )
+        s[2][c] = a ^ x_2[x_2[a]] ^ x_2[x_2[x_2[a]]] ^ \
+                  b ^ x_2[x_2[x_2[b]]] ^ \
+                  x_2[s[2][c]] ^ x_2[x_2[s[2][c]]] ^ x_2[x_2[x_2[s[2][c]]]] ^ \
+                  s[3][c] ^ x_2[s[3][c]] ^ x_2[x_2[x_2[s[3][c]]]]
 
-        s[3][c] = (
-            a
-            ^ x_2[a]
-            ^ x_2[x_2[x_2[a]]]
-            ^ b
-            ^ x_2[x_2[b]]
-            ^ x_2[x_2[x_2[b]]]
-            ^ d
-            ^ x_2[x_2[x_2[d]]]
-            ^ x_2[s[3][c]]
-            ^ x_2[x_2[s[3][c]]]
-            ^ x_2[x_2[x_2[s[3][c]]]]
-        )
+        s[3][c] = a ^ x_2[a] ^ x_2[x_2[x_2[a]]] ^ \
+                  b ^ x_2[x_2[b]] ^ x_2[x_2[x_2[b]]] ^ \
+                  d ^ x_2[x_2[x_2[d]]] ^ \
+                  x_2[s[3][c]] ^ x_2[x_2[s[3][c]]] ^ x_2[x_2[x_2[s[3][c]]]]
 
 
 def key_expansion(key):
-    temp1 = [int(key[2 * i : 2 * i + 2], 16) for i in range(len(key) // 2)]
-    temp = [temp1[4 * i : 4 * i + 4] for i in range(len(temp1) // 4)]
+    temp1 = [int(key[2*i:2*i + 2], 16) for i in range(len(key)//2)]
+    temp = [temp1[4*i: 4*i + 4] for i in range(len(temp1)//4)]
 
     # For 128 bit key
     if len(temp1) == 16:
@@ -200,26 +159,26 @@ def key_expansion(key):
                 if len(temp) == 60:
                     break
     key_grid = []
-    for i in range(len(temp) // 4):
-        a = temp[4 * i : 4 * i + 4]
+    for i in range(len(temp)//4):
+        a = temp[4*i:4*i+4]
         h = [[a[j][i] for j in range(len(a))] for i in range(len(a[0]))]
         key_grid.append(h)
     return key_grid
 
 
 def debug(m, s):
-    S = [[s[j][i] for j in range(4)] for i in range(4)]
+    S = [[s[j][i]for j in range(4)] for i in range(4)]
     b = []
     for i in S:
         for j in i:
-            b.append(f'{j:0>2x}')
+            b.append(f"{j:0>2x}")
     c = ''.join(i for i in b)
     print(m + ' \t' + c)
 
 
 def encrypt(m, key):
     key_grid = key_expansion(key)
-    temp = [int(m[2 * i : 2 * i + 2], 16) for i in range(len(m) // 2)]
+    temp = [int(m[2*i:2*i + 2], 16) for i in range(len(m)//2)]
     # Declaring state matrix
     s = [[temp[i * 4 + j] for i in range(4)] for j in range(4)]
     debug('round[ 0].input', s)
@@ -227,41 +186,41 @@ def encrypt(m, key):
     # adding first round key
     add_roundkey(s, key_grid[0])
     # rounds for different key sizes
-    if len(key) // 2 == 16:
+    if len(key)//2 == 16:
         for round in range(9):
-            debug('round[ {}].start'.format(round + 1), s)
+            debug('round[ {}].start'.format(round+1), s)
             sub_bytes(s)
-            debug('round[ {}].s_box'.format(round + 1), s)
+            debug('round[ {}].s_box'.format(round+1), s)
             mix_row(s)
-            debug('round[ {}].s_row'.format(round + 1), s)
+            debug('round[ {}].s_row'.format(round+1), s)
             mix_column(s)
-            debug('round[ {}].m_col'.format(round + 1), s)
-            debug('round[ {}].k_sch'.format(round + 1), key_grid[round + 1])
-            add_roundkey(s, key_grid[round + 1])
+            debug('round[ {}].m_col'.format(round+1), s)
+            debug('round[ {}].k_sch'.format(round+1), key_grid[round+1])
+            add_roundkey(s, key_grid[round+1])
         last_round = 10
-    elif len(key) // 2 == 24:
+    elif len(key)//2 == 24:
         for round in range(11):
-            debug('round[ {}].start'.format(round + 1), s)
+            debug('round[ {}].start'.format(round+1), s)
             sub_bytes(s)
-            debug('round[ {}].s_box'.format(round + 1), s)
+            debug('round[ {}].s_box'.format(round+1), s)
             mix_row(s)
-            debug('round[ {}].s_row'.format(round + 1), s)
+            debug('round[ {}].s_row'.format(round+1), s)
             mix_column(s)
-            debug('round[ {}].m_col'.format(round + 1), s)
-            debug('round[ {}].k_sch'.format(round + 1), key_grid[round + 1])
-            add_roundkey(s, key_grid[round + 1])
+            debug('round[ {}].m_col'.format(round+1), s)
+            debug('round[ {}].k_sch'.format(round+1), key_grid[round+1])
+            add_roundkey(s, key_grid[round+1])
         last_round = 12
-    elif len(key) // 2 == 32:
+    elif len(key)//2 == 32:
         for round in range(13):
-            debug('round[ {}].start'.format(round + 1), s)
+            debug('round[ {}].start'.format(round+1), s)
             sub_bytes(s)
-            debug('round[ {}].s_box'.format(round + 1), s)
+            debug('round[ {}].s_box'.format(round+1), s)
             mix_row(s)
-            debug('round[ {}].s_row'.format(round + 1), s)
+            debug('round[ {}].s_row'.format(round+1), s)
             mix_column(s)
-            debug('round[ {}].m_col'.format(round + 1), s)
-            debug('round[ {}].k_sch'.format(round + 1), key_grid[round + 1])
-            add_roundkey(s, key_grid[round + 1])
+            debug('round[ {}].m_col'.format(round+1), s)
+            debug('round[ {}].k_sch'.format(round+1), key_grid[round+1])
+            add_roundkey(s, key_grid[round+1])
         last_round = 14
     # last round with no mix column
     debug('round[{}].start'.format(last_round), s)
@@ -276,8 +235,8 @@ def encrypt(m, key):
 
 def decrypt(c, key):
     key_grid = key_expansion(key)
-    temp = [int(c[2 * i : 2 * i + 2], 16) for i in range(len(c) // 2)]
-    chunks = [temp[16 * i : 16 * i + 16] for i in range(len(c) // 32)]
+    temp = [int(c[2*i:2*i +2], 16) for i in range(len(c)//2)]
+    chunks = [temp[16 * i:16 * i + 16] for i in range(len(c) // 32)]
     for chunk in chunks:
         # Declaring state matrix
         s = [[chunk[i * 4 + j] for i in range(4)] for j in range(4)]
@@ -286,39 +245,39 @@ def decrypt(c, key):
         # first round with no mix column
         add_roundkey(s, key_grid[-1])
         # rounds for different key sizes
-        if len(key) // 2 == 16:
+        if len(key)//2 == 16:
             for round in range(9):
-                debug('round[ {}].istart'.format(round + 1), s)
+                debug('round[ {}].istart'.format(round+1), s)
                 invmix_row(s)
-                debug('round[ {}].is_row'.format(round + 1), s)
+                debug('round[ {}].is_row'.format(round+1), s)
                 invsub_bytes(s)
                 debug('round[ {}].is_box'.format(round + 1), s)
-                debug('round[ {}].ik_sch'.format(round + 1), key_grid[-2 - round])
-                add_roundkey(s, key_grid[-2 - round])
+                debug('round[ {}].ik_sch'.format(round + 1), key_grid[-2-round])
+                add_roundkey(s, key_grid[-2-round])
                 debug('round[ {}].ik_add'.format(round + 1), s)
                 invmix_column(s)
             last_round = 10
-        elif len(key) // 2 == 24:
+        elif len(key)//2 == 24:
             for round in range(11):
-                debug('round[ {}].istart'.format(round + 1), s)
+                debug('round[ {}].istart'.format(round+1), s)
                 invmix_row(s)
-                debug('round[ {}].is_row'.format(round + 1), s)
+                debug('round[ {}].is_row'.format(round+1), s)
                 invsub_bytes(s)
                 debug('round[ {}].is_box'.format(round + 1), s)
-                debug('round[ {}].ik_sch'.format(round + 1), key_grid[-2 - round])
-                add_roundkey(s, key_grid[-2 - round])
+                debug('round[ {}].ik_sch'.format(round + 1), key_grid[-2-round])
+                add_roundkey(s, key_grid[-2-round])
                 debug('round[ {}].ik_add'.format(round + 1), s)
                 invmix_column(s)
             last_round = 12
-        elif len(key) // 2 == 32:
+        elif len(key)//2 == 32:
             for round in range(13):
-                debug('round[ {}].istart'.format(round + 1), s)
+                debug('round[ {}].istart'.format(round+1), s)
                 invmix_row(s)
-                debug('round[ {}].is_row'.format(round + 1), s)
+                debug('round[ {}].is_row'.format(round+1), s)
                 invsub_bytes(s)
                 debug('round[ {}].is_box'.format(round + 1), s)
-                debug('round[ {}].ik_sch'.format(round + 1), key_grid[-2 - round])
-                add_roundkey(s, key_grid[-2 - round])
+                debug('round[ {}].ik_sch'.format(round + 1), key_grid[-2-round])
+                add_roundkey(s, key_grid[-2-round])
                 debug('round[ {}].ik_add'.format(round + 1), s)
                 invmix_column(s)
             last_round = 14
