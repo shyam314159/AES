@@ -4,7 +4,7 @@ AES - Advanced Encryption Standard
 
 AES implementation in python for 128, 192, 256 bits
 
-`Reference<https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf>`_
+`Reference <https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf>`_
 
 Code Style and Development Guidelines
 -------------------------------------
